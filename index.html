@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body { margin: 0; padding: 0; height: 100vh; display: flex; justify-content: center; align-items: center; 
+               background: #000; transition: background 0.8s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; }
+        
+        body.ready { background: #fff; }
+
+        #brand { font-family: 'Segoe UI', sans-serif; font-size: 4rem; color: #fff; 
+                 transition: color 0.8s ease; letter-spacing: -1px; font-weight: 600; }
+        
+        .ready #brand { color: #000; }
+
+        /* Bubble Animation */
+        .bubble { position: absolute; background: #007AFF; border-radius: 50%; opacity: 0; }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(-20vh) scale(1); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="brand">x</div>
+
+<script>
+    const brand = document.getElementById('brand');
+
+    // Sequence timing
+    setTimeout(() => { 
+        brand.innerText = "xenonOS"; 
+    }, 1200);
+
+    setTimeout(() => { 
+        document.body.classList.add('ready'); 
+        spawnBubbles();
+    }, 2200);
+
+    function spawnBubbles() {
+        for (let i = 0; i < 15; i++) {
+            const b = document.createElement('div');
+            b.className = 'bubble';
+            const size = Math.random() * 40 + 10 + 'px';
+            b.style.width = size;
+            b.style.height = size;
+            b.style.left = Math.random() * 100 + 'vw';
+            // Randomize duration and delay for organic feel
+            b.style.animation = `float ${Math.random() * 2 + 3}s cubic-bezier(0.2, 0, 0.3, 1) ${Math.random() * 2}s infinite`;
+            document.body.appendChild(b);
+        }
+    }
+</script>
+</body>
+</html>

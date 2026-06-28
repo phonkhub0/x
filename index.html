@@ -4,27 +4,33 @@
     <style>
         body { 
             margin: 0; height: 100vh; display: flex; justify-content: center; align-items: center; 
-            background: #000; transition: background 1.5s ease; overflow: hidden;
+            background: #000; transition: background 1s ease; overflow: hidden;
         }
-        
-        #brand { 
-            display: flex; align-items: center; font-family: sans-serif; font-size: 5rem; 
-            color: #fff; font-weight: 700; white-space: nowrap; z-index: 10;
-            transition: color 1s ease;
-        }
+        body.white-bg { background: #fff; }
+        body.blue-bg { background: #007AFF; }
 
-        /* Slide effect */
+        /* The wrapper is centered; the content inside expands */
+        #brand { 
+            display: flex; align-items: center; justify-content: center;
+            font-family: sans-serif; font-size: 5rem; color: #fff; 
+            font-weight: 700; white-space: nowrap; transition: color 1s ease;
+        }
+        .white-bg #brand { color: #000; }
+        .blue-bg #brand { color: #fff; }
+
         #sliding-part { 
             width: 0; overflow: hidden; display: inline-block;
             transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .expanded #sliding-part { width: 440px; }
 
-        /* Bubbles */
         .bubble { 
             position: absolute; bottom: -100px; background: #007AFF; 
-            border-radius: 50%; opacity: 0.8; z-index: 5;
-            transition: transform 3s ease-out;
+            border-radius: 50%; opacity: 0.8; z-index: -1;
+        }
+        @keyframes float {
+            0% { transform: translateY(0); opacity: 0.8; }
+            100% { transform: translateY(-120vh); opacity: 0.8; }
         }
     </style>
 </head>
@@ -36,34 +42,28 @@
 
 <script>
     const brand = document.getElementById('brand');
-    const container = document.getElementById('brand');
+    const slider = document.getElementById('sliding-part');
 
-    // 1. Trigger slide-out
-    setTimeout(() => { container.classList.add('expanded'); }, 500);
+    // 1. Expand text (centered)
+    setTimeout(() => { slider.parentElement.classList.add('expanded'); }, 500);
 
-    // 2. Spawn large bubbles that collect at the top
+    // 2. Turn White
+    setTimeout(() => { document.body.classList.add('white-bg'); }, 2000);
+
+    // 3. Bubbles and Turn Blue
     setTimeout(() => {
-        for (let i = 0; i < 40; i++) {
+        for (let i = 0; i < 25; i++) {
             const b = document.createElement('div');
             b.className = 'bubble';
-            const size = Math.random() * 80 + 40 + 'px'; // Larger bubbles
+            const size = Math.random() * 60 + 40 + 'px'; // Larger bubbles
             b.style.width = size; b.style.height = size;
             b.style.left = Math.random() * 100 + 'vw';
-            b.style.bottom = '-100px';
+            b.style.animation = `float ${Math.random() * 2 + 2}s ease-in forwards`;
             document.body.appendChild(b);
-
-            // Move to top
-            setTimeout(() => {
-                b.style.transform = 'translateY(-110vh)';
-            }, 500);
         }
-    }, 1500);
-
-    // 3. Final color flip when bubbles hit the top
-    setTimeout(() => {
-        document.body.style.backgroundColor = '#007AFF'; // Background turns blue
-        brand.style.color = '#fff'; // Text turns white
-    }, 4000);
+        // Change to blue after bubbles start filling
+        setTimeout(() => { document.body.classList.replace('white-bg', 'blue-bg'); }, 1500);
+    }, 3000);
 </script>
 </body>
 </html>

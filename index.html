@@ -5,21 +5,18 @@
         body { 
             margin: 0; height: 100vh; display: flex; justify-content: center; align-items: center; 
             background: #000; transition: background 1.5s ease-in-out; overflow: hidden;
-            /* Prevents layout shifts */
-            will-change: background;
         }
         
         body.white-bg { background: #fff; }
         body.blue-bg { background: #007AFF; }
 
-        /* The container keeps the text centered regardless of content */
+        /* Centered Wrapper */
         #brand-wrapper { 
             display: flex; justify-content: center; align-items: center;
-            width: 500px; /* Fixed width prevents shifting */
-            font-family: 'Segoe UI', sans-serif; font-size: 5rem; 
+            width: 500px; font-family: sans-serif; font-size: 5rem; 
             font-weight: 700; color: #fff; transition: color 1.5s ease;
+            z-index: 2; /* Keeps text above bubbles */
         }
-
         .white-bg #brand-wrapper { color: #000; }
         .blue-bg #brand-wrapper { color: #fff; }
 
@@ -29,9 +26,10 @@
         }
         .expanded #sliding-part { width: 330px; }
 
+        /* Bubbles are now 'fixed' so they don't mess up layout */
         .bubble { 
-            position: absolute; bottom: -150px; background: #007AFF; 
-            border-radius: 50%; opacity: 0.7; z-index: -1;
+            position: fixed; bottom: -150px; background: #007AFF; 
+            border-radius: 50%; opacity: 0.7; z-index: 1;
             pointer-events: none;
         }
         @keyframes float {
@@ -49,22 +47,26 @@
 <script>
     const wrapper = document.getElementById('brand-wrapper');
 
-    // 1. Smooth slide-out
+    // 1. Slide-out
     setTimeout(() => { wrapper.classList.add('expanded'); }, 800);
 
-    // 2. Smooth transition to white
+    // 2. Turn White
     setTimeout(() => { document.body.classList.add('white-bg'); }, 2200);
 
-    // 3. Bubbles + transition to blue
+    // 3. Bubbles + Turn Blue
     setTimeout(() => {
         document.body.classList.add('blue-bg');
-        for (let i = 0; i < 30; i++) {
+        // Spawn bubbles
+        for (let i = 0; i < 25; i++) {
             const b = document.createElement('div');
             b.className = 'bubble';
-            const size = Math.random() * 80 + 50 + 'px';
-            b.style.width = size; b.style.height = size;
+            const size = Math.random() * 80 + 40 + 'px';
+            b.style.width = size;
+            b.style.height = size;
             b.style.left = Math.random() * 100 + 'vw';
-            b.style.animation = `float ${Math.random() * 2 + 3}s ease-in forwards`;
+            // Randomize speed and delay for a natural 'rising' effect
+            const duration = Math.random() * 2 + 3;
+            b.style.animation = `float ${duration}s ease-in forwards`;
             document.body.appendChild(b);
         }
     }, 3800);

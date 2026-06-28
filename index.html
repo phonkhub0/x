@@ -8,22 +8,23 @@
         }
         body.ready { background: #fff; }
 
-        /* Flex container keeps everything in a row */
         #brand { 
-            display: flex; font-family: sans-serif; font-size: 5rem; 
+            display: flex; align-items: center; font-family: sans-serif; font-size: 5rem; 
             color: #fff; font-weight: 700; white-space: nowrap;
             transition: color 0.8s ease;
         }
         .ready #brand { color: #000; }
 
-        /* The letters to be revealed */
-        .reveal { 
-            width: 0; overflow: hidden; 
+        /* Ensure enonOS starts at 0 width and invisible */
+        #sliding-part { 
+            width: 0; 
+            overflow: hidden; 
+            display: inline-block;
             transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .expanded .reveal { width: 100%; }
+        .expanded #sliding-part { width: 450px; /* Adjust this width to match your text length */ }
 
-        .bubble { position: absolute; background: #007AFF; border-radius: 50%; opacity: 0; }
+        .bubble { position: absolute; background: #007AFF; border-radius: 50%; opacity: 0; pointer-events: none; }
         @keyframes float {
             0% { transform: translateY(100vh); opacity: 0; }
             50% { opacity: 0.6; }
@@ -33,32 +34,31 @@
 </head>
 <body>
 
-<div id="brand">
-    <span>x</span>
-    <span id="sliding-part" class="reveal">enonOS</span>
+<div id="brand" id="brand-container">
+    <span>x</span><span id="sliding-part">enonOS</span>
 </div>
 
 <script>
-    const brand = document.getElementById('brand');
-    const slider = document.getElementById('sliding-part');
-
+    const container = document.getElementById('brand');
+    
     // 1. Trigger the slide-out
     setTimeout(() => { 
-        slider.classList.add('expanded'); 
-    }, 500);
+        container.classList.add('expanded'); 
+    }, 800);
 
     // 2. Trigger the color flip
     setTimeout(() => { 
         document.body.classList.add('ready'); 
         spawnBubbles();
-    }, 1800);
+    }, 2200);
 
     function spawnBubbles() {
-        for (let i = 0; i < 15; i++) {
+        for (let i = 0; i < 20; i++) {
             const b = document.createElement('div');
             b.className = 'bubble';
             const size = Math.random() * 30 + 10 + 'px';
-            b.style.width = size; b.style.height = size;
+            b.style.width = size;
+            b.style.height = size;
             b.style.left = Math.random() * 100 + 'vw';
             b.style.animation = `float ${Math.random() * 2 + 3}s ease-in ${Math.random() * 1}s infinite`;
             document.body.appendChild(b);
